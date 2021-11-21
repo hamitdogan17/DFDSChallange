@@ -11,7 +11,7 @@ namespace DFDS.Challange.Customer.Data.EF.Configurations
             builder.ToTable("tb_Status", "dbo");
 
 
-            builder.Property(e => e.StatusRef).ValueGeneratedNever();
+            builder.Property(e => e.StatusRef).ValueGeneratedNever().UseIdentityColumn();
             OnConfigurePartial(builder);
         }
 

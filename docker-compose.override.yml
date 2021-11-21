@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+    customerdb:
+        container_name: customerdb
+        ports:
+            - "1433:1433"
+        environment:
+            SA_PASSWORD: "SwN12345678"
+            ACCEPT_EULA: "Y"
+
+    dfds.challange.customer.api:
+        environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+        - ASPNETCORE_URLS=https://+:443;http://+:80
+        - "ConnectionString=Server=customerdb;Database=CustomerDb;User Id=sa;Password=SwN12345678;"
+        ports:
+            - "80"
+            - "443"
+        volumes:
+            - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+            - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro

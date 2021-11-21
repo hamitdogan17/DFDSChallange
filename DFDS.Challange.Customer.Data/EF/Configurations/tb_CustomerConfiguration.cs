@@ -8,6 +8,7 @@ namespace DFDS.Challange.Customer.Data.EF.Configurations
         public void Configure(EntityTypeBuilder<tb_Customer> builder)
         {
             builder.HasKey(e => e.Id);
+            builder.Property(o => o.Id).ValueGeneratedOnAdd().UseIdentityColumn();
 
             builder.ToTable("tb_Customer", "dbo");
 

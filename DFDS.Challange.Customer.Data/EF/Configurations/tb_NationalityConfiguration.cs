@@ -11,7 +11,7 @@ namespace DFDS.Challange.Customer.Data.EF.Configurations
             builder.ToTable("tb_Nationality", "dbo");
 
 
-            builder.Property(e => e.NationalityRef).ValueGeneratedNever();
+            builder.Property(e => e.NationalityRef).ValueGeneratedNever().UseIdentityColumn();
 
             OnConfigurePartial(builder);
         }

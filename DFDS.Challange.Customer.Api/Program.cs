@@ -33,7 +33,7 @@ namespace DFDS.Challange.Customer.Api
                 try
                 {
                     var customerContext = services.GetRequiredService<CustomerDbContext>();
-                    CustomerContextSeed.Seed(customerContext, loggerFactory);
+                    CustomerContextSeed.SeedAsync(customerContext, loggerFactory);
                 }
                 catch (Exception ex)
                 {

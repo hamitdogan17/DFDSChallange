@@ -3,12 +3,13 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DFDS.Challange.Customer.Data.EF
 {
     public class CustomerContextSeed
     {
-        public static void Seed(CustomerDbContext customerDbContext, ILoggerFactory loggerFactory, int? retry = 0)
+        public static async Task SeedAsync(CustomerDbContext customerDbContext, ILoggerFactory loggerFactory, int? retry = 0)
         {
             int retryForAvailability = retry.Value;
 
@@ -16,20 +17,20 @@ namespace DFDS.Challange.Customer.Data.EF
             {
                 customerDbContext.Database.Migrate();
 
-                if (!customerDbContext.tb_Status.Any())
-                {
-                    customerDbContext.tb_Status.AddRange(GetPreconfiguredStatuses());
-                    customerDbContext.SaveChanges();
-                }
-                if (!customerDbContext.tb_Nationality.Any())
+                if (!customerDbContext.tb_Nationality.AsNoTracking().Any())
                 {
                     customerDbContext.tb_Nationality.AddRange(GetPreconfiguredNationalities());
-                    customerDbContext.SaveChanges();
+                    await customerDbContext.SaveChangesAsync();
                 }
-                if (!customerDbContext.tb_Customer.Any())
+                if (!customerDbContext.tb_Status.AsNoTracking().Any())
+                {
+                    customerDbContext.tb_Status.AddRange(GetPreconfiguredStatuses());
+                    await customerDbContext.SaveChangesAsync();
+                }
+                if (!customerDbContext.tb_Customer.AsNoTracking().Any())
                 {
                     customerDbContext.tb_Customer.AddRange(GetPreconfiguredCustomer());
-                    customerDbContext.SaveChanges();
+                    await customerDbContext.SaveChangesAsync();
                 }
 
             }
@@ -40,7 +41,7 @@ namespace DFDS.Challange.Customer.Data.EF
                     retryForAvailability++;
                     var log = loggerFactory.CreateLogger<CustomerContextSeed>();
                     log.LogError(ex.Message);
-                    Seed(customerDbContext, loggerFactory, retryForAvailability);
+                    await SeedAsync(customerDbContext, loggerFactory, retryForAvailability);
                 }
 
                 throw;
